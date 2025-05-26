@@ -1,0 +1,9 @@
+- name: My HomeLab Playbook
+  hosts: raspberryPi
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Print message
+     ansible.builtin.debug:
+       msg: Hello world
