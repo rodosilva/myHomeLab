@@ -1,5 +1,7 @@
 - name: My HomeLab Playbook
   hosts: raspberryPi
+  become: true
+  become_user: root
   tasks:
    - name: Ping my hosts
      ansible.builtin.ping:
@@ -7,3 +9,10 @@
    - name: Print message
      ansible.builtin.debug:
        msg: Hello world
+  
+   - name: Install Samba
+     ansible.builtin.apt:
+       name: samba
+       state: present
+       update_cache: yes
+

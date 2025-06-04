@@ -13,4 +13,4 @@ ssh-keyscan -t ed25519 ${RASPBERRY_IP} | tee /root/.ssh/known_hosts
 echo "Listando llaves..."
 ssh-add -l
 
-ansible-playbook -i ./ansible/inventory.ini ./ansible/myhomelab-playbook.yaml
+ansible-playbook -K -i ./ansible/inventory.ini ./ansible/myhomelab-playbook.yaml
