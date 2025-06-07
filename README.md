@@ -62,5 +62,11 @@ sudo usermod -aG docker rodo
 ## NOTAS MISC
 Para probar contenedor
 ```bash
-docker run --rm -it --entrypoint "/bin/bash" 0a6baaa4e7b6 -c "tail -f /dev/null"
+docker run --rm -it -d --entrypoint "/bin/bash" 0a6baaa4e7b6 -c "tail -f /dev/null"
+docker exec -it bee /bin/bash
+```
+
+Para crear roles
+```bash
+ansible-galaxy init [role-name]
 ```

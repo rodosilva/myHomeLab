@@ -1,0 +1,11 @@
+---
+# tasks file for samba
+
+- name: Build Samba Image from Dockerfile
+  community.docker.docker_image:
+    name: samba
+    state: present
+    build:
+      path: /app/ansible/roles/samba/files
+      dockerfile: Dockerfile
+    source: build
