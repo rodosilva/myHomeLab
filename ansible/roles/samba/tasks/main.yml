@@ -1,11 +1,17 @@
 ---
 # tasks file for samba
 
+- name: Copy Dockerfile to Raspberry Pi
+  ansible.builtin.copy:
+    src: roles/samba/files/Dockerfile
+    dest: /home/rodo/Dockerfile
+
 - name: Build Samba Image from Dockerfile
   community.docker.docker_image:
     name: samba
     state: present
     build:
-      path: /app/ansible/roles/samba/files
+      path: /home/rodo
       dockerfile: Dockerfile
     source: build
+  delegate_to: 192.168.1.11

@@ -4,6 +4,6 @@
   become_user: root
 
   roles:
-   - common
-   - docker
+  # - common
+  # - docker
    - samba
