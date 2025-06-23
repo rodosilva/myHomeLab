@@ -1,17 +1,39 @@
 ---
 # tasks file for samba
 
-- name: Copy Dockerfile to Raspberry Pi
+- name: Create Samba Directory
+  ansible.builtin.file:
+    path: /home/rodo/samba
+    state: directory
+    mode: '0755'
+
+- name: Create Mount Directory
+  ansible.builtin.file:
+    path: /mnt/external
+    state: directory
+    mode: '0755'
+
+- name: Copy Dockerfile to Samba Directory on the Raspberry Pi
   ansible.builtin.copy:
     src: roles/samba/files/Dockerfile
-    dest: /home/rodo/Dockerfile
+    dest: /home/rodo/samba/Dockerfile
+
+- name: Mount External Storage
+  ansible.posix.mount:
+    path: /mnt/external
+    src: /dev/sda4
+    fstype: ntfs
+    state: mounted
 
 - name: Build Samba Image from Dockerfile
   community.docker.docker_image:
-    name: samba
+    name: '{{ CONTAINER_SAMBA_NAME }}:{{ CONTAINER_SAMBA_TAG}}'
     state: present
     build:
-      path: /home/rodo
+      path: /home/rodo/samba/
       dockerfile: Dockerfile
     source: build
   delegate_to: 192.168.1.11
+
+- name: Run a Script to run the Docker Samba Container
+  ansible.builtin.script: roles/samba/files/run-samba-container.sh

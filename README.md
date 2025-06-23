@@ -70,3 +70,7 @@ Para crear roles
 ```bash
 ansible-galaxy init [role-name]
 ```
+
+Puertos del SMB
+- 445
+- 139
