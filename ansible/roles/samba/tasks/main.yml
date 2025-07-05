@@ -13,7 +13,12 @@
     state: directory
     mode: '0755'
 
-- name: Copy Dockerfile to Samba Directory on the Raspberry Pi
+- name: Copy variables to Samba Directory on the Raspberry Pi
+  ansible.builtin.copy:
+    src: '{{ DIR_PROJECT }}/variables.env'
+    dest: /home/rodo/samba/variables.env
+
+- name: Copy Dockerfile file to Samba Directory on the Raspberry Pi
   ansible.builtin.copy:
     src: roles/samba/files/Dockerfile
     dest: /home/rodo/samba/Dockerfile
@@ -36,4 +41,4 @@
   delegate_to: 192.168.1.11
 
 - name: Run a Script to run the Docker Samba Container
-  ansible.builtin.script: roles/samba/files/run-samba-container.sh
+  ansible.builtin.script: roles/samba/files/run-samba-container.sh /home/rodo/samba/variables.env

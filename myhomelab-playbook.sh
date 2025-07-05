@@ -13,4 +13,4 @@ ssh-keyscan -t ed25519 ${RASPBERRY_IP} | tee /root/.ssh/known_hosts
 echo "Listando llaves..."
 ssh-add -l
 
-ansible-playbook -K -i ./ansible/inventory.ini ./ansible/myhomelab-playbook.yaml --extra-vars "CONTAINER_SAMBA_NAME=${CONTAINER_SAMBA_NAME} CONTAINER_SAMBA_TAG=${CONTAINER_SAMBA_TAG}"
+ansible-playbook -K -i ./ansible/inventory.ini ./ansible/myhomelab-playbook.yaml --extra-vars "CONTAINER_SAMBA_NAME=${CONTAINER_SAMBA_NAME} CONTAINER_SAMBA_TAG=${CONTAINER_SAMBA_TAG} DIR_PROJECT=${DIR_PROJECT}"
