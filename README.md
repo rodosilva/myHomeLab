@@ -12,7 +12,7 @@ Infraestructura de contenedores Docker que prestará diferentes servicios y apli
     - Architecture: aarch64
     - Mem: 8 Gbps
 
-## INSTALACIONES INICIALES
+## INSTALACIONES INICIALES EN EL RASPBERRYPI
 
 El primer paso sería establecer una dirección IP fija para nuestro `Raspberry Pi 5`
 - Hostname: `rodo-raspberrypi`
@@ -49,7 +49,7 @@ Considerando que en nuestra máquina local ya tenemos llaves, podemos enviar la 
 ssh-copy-id rodo@192.168.1.11
 ```
 
-### Docker
+### Instalando Docker en el RaspberryPi
 Considerando lo antes descrito [aquí](#hardware-inicial)
 Procederemos a instalar **Docker:**
 [Docker en Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
@@ -74,3 +74,15 @@ ansible-galaxy init [role-name]
 Puertos del SMB
 - 445
 - 139
+
+## DESPLIEGUE DE CONTENEDORES EN EL RASPBERRY PI DESDE UN CONTENEDOR LOCAL ANSIBLE
+Tal y como lo describe el título, el objetivo aquí es:
+- Desde nuestra máquina local, crearemos y correremos un contenedor que a su vez ejecuta una o una serie de tareas descritas en un `Ansible-playbook`
+- Dicho `playbook` enviará una serie de tareas dirigidas hacia el `RaspberryPi`
+- El primer rol del `Ansible-playbook` que se desplegará sera `Samba`
+
+### Samba Server
+EL primer rol que se despliega hacia el `RaspberryPi` a modo de contenedor es un servidor `Samba`
+
+![rol-smb](./pics/rol-smb.jpg)
+

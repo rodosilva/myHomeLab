@@ -11,4 +11,4 @@ docker run --rm -it -d \
            -e CONTAINER_SAMBA_NAME \
            -e CONTAINER_SAMBA_TAG \
            ${CONTAINER_SAMBA_NAME}:${CONTAINER_SAMBA_TAG} \
-           /bin/bash -c "tail -f /dev/null"
+           /bin/bash -c "service smbd restart && tail -f /dev/null"
