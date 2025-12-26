@@ -1,0 +1,10 @@
+---
+# tasks file for jellyfin
+
+- name: Run script to build the Jellyfin Container
+  ansible.builtin.script: roles/jellyfin/files/build-jellyfin.sh
+
+- name: Run script to run Jellyfin Container
+  ansible.builtin.script: roles/jellyfin/files/run-jellyfin.sh
+
+

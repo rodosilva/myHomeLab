@@ -99,8 +99,11 @@ Es con este script que luego de una serie de comandos para no tener problemas co
 
 Finalmente, [myhomelab-playbook.yaml](./ansible/myhomelab-playbook.yaml) es quien sigue una secuencia de tareas ordenada por `roles`.
 
-### Rol: Samba Server
+### ROL: Samba Server
 EL primer rol que se despliega hacia el `RaspberryPi` a modo de contenedor es un servidor `Samba`
 
 ![rol-smb](./pics/rol-smb.jpg)
+
+### ROL: Jellyfin
+
 

@@ -7,6 +7,7 @@ docker run -d \
  --net=host \
  --volume jellyfin-config:/config \
  --volume jellyfin-cache:/cache \
+ --mount type=bind,source=/mnt/external/PELICULAS,target=/media \
  --restart=unless-stopped \
  -p 8096:8096 \
  jellyfin/jellyfin
