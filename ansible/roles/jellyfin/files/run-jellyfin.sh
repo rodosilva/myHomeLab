@@ -14,3 +14,6 @@ docker run -d \
 
  # --mount type=bind,source=/path/to/media,target=/media \
  # http://192.168.1.11:8096/web/#/wizardstart.html
+ # Usuario: ***
+ # Contraseña: ***
+ 
