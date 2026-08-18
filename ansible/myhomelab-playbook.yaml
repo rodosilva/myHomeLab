@@ -4,7 +4,9 @@
   become_user: root
 
   roles:
-  # - common
-  # - docker
-   - samba
-   - jellyfin
+  #- { role: common, tags: ['common'] }
+  #- { role: docker, tags: ['docker'] }
+  #- { role: jellyfin, tags: ['jellyfin'] }
+  - { role: samba, tags: ['samba'] }
+  #- { role: vault, tags: ['vault'] }
+  #- { role: reverse-proxy, tags: ['reverse-proxy'] }

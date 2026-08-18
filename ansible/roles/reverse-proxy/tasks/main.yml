@@ -1,0 +1,55 @@
+---
+# tasks file for reverse-proxy
+
+# Create a reverse-proxy directory on the Raspberry Pi
+- name: Create reverse-proxy Directory
+  ansible.builtin.file:
+    path: /home/raspberry/reverse-proxy
+    state: directory
+    mode: '0755'
+
+# Create a cert directory
+- name: Create cert Directory
+  ansible.builtin.file:
+    path: /home/raspberry/reverse-proxy/certs
+    state: directory
+    mode: '0755'
+
+# Copy variables to reverse-proxy
+- name: Copy variables to reverse-proxy Directory on the Raspberry Pi
+  ansible.builtin.copy:
+    src: '{{ DIR_PROJECT }}/variables.env'
+    dest: /home/raspberry/reverse-proxy/variables.env
+
+# Copy reverse-proxy Dockerfile to the Raspberry Pi
+- name: Copy Dockerfile file to reverse-proxy Directory on the Raspberry Pi
+  ansible.builtin.copy:
+    src: roles/reverse-proxy/files/Dockerfile
+    dest: /home/raspberry/reverse-proxy/Dockerfile
+
+# Copy reverse-proxy certs to the Raspberry Pi
+- name: Copy SSL certificates (self-signed) to reverse-proxy Directory on the Raspberry Pi
+  ansible.builtin.copy:
+    src: roles/reverse-proxy/files/certs/
+    dest: /home/raspberry/reverse-proxy/certs
+
+# Copy nginx.conf (vaultwarden.conf) to the Raspberry Pi
+- name: Copy nginx.conf (vaultwarden.conf) to reverse-proxy Directory on the Raspberry Pi
+  ansible.builtin.copy:
+    src: roles/reverse-proxy/files/vaultwarden.conf
+    dest: /home/raspberry/reverse-proxy/vaultwarden.conf
+
+# Build the reverse-proxy Image from Dockerfile
+- name: Build reverse-proxy Image
+  community.docker.docker_image:
+    name: '{{ CONTAINER_REVERSEPROXY_NAME }}:{{ CONTAINER_REVERSEPROXY_TAG}}'
+    state: present
+    build:
+      path: /home/raspberry/reverse-proxy/
+      dockerfile: Dockerfile
+    source: build
+  delegate_to: 192.168.1.11
+
+# Run a script to run the Docker reverse-proxy Container
+- name: Run a Script to run the Docker reverse-proxy Container
+  ansible.builtin.script: roles/reverse-proxy/files/run-reverse-proxy-container.sh /home/raspberry/reverse-proxy/variables.env

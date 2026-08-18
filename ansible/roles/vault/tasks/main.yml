@@ -1,0 +1,8 @@
+---
+# tasks file for vault
+
+- name: Run script to build the vaultwarden Image
+  ansible.builtin.script: roles/vault/files/build-vault.sh
+
+- name: Run script to run vaultwarden Container
+  ansible.builtin.script: roles/vault/files/run-vault.sh
