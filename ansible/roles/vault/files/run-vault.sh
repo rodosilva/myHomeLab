@@ -3,7 +3,7 @@
 
 docker run -d \
  --name vaultwarden \
- --user $(id -u rodo):$(id -g rodo) \
+ --user $(id -u raspberry):$(id -g raspberry) \
  --network homelab \
  --volume /home/rodrigo/secrets/:/data \
  --restart=unless-stopped \

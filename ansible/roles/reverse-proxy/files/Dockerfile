@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Copiar certificados SSL
 COPY ./certs/cert.pem /etc/nginx/certs/cert.pem
-COPY ./certs/key.pem /etc/nginx/certs/key.pem
+COPY ./certs/cert.key /etc/nginx/certs/cert.key
 
 # Copiar archivo de configuración de NGINX para Vaultwarden
 COPY ./vaultwarden.conf /etc/nginx/conf.d/vaultwarden.conf

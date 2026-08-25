@@ -106,4 +106,66 @@ EL primer rol que se despliega hacia el `RaspberryPi` a modo de contenedor es un
 
 ### ROL: Jellyfin
 
+### STACK: Reverse Proxy + Vaultwarden
+
+Esta solución publica Vaultwarden de forma segura a través de un reverse proxy
+Nginx ejecutado en un contenedor independiente dentro del Raspberry Pi.
+
+#### Resumen del stack
+
+| Capa | Tecnología | Responsabilidad |
+| --- | --- | --- |
+| Hardware | Raspberry Pi 5, aarch64 | Ejecuta los servicios en Ubuntu 24.04.2 LTS |
+| Automatización | Ansible | Copia archivos, certificados y configuraciones; construye y ejecuta los contenedores |
+| Runtime | Docker | Aísla los servicios y conecta ambos contenedores |
+| Red | Docker bridge `homelab` | Permite que el proxy resuelva Vaultwarden por el nombre `vaultwarden` |
+| Reverse proxy | Nginx Alpine | Atiende HTTP/HTTPS, redirige HTTP a HTTPS y reenvía las peticiones |
+| Aplicación | `vaultwarden/server:latest` | Proporciona el servidor compatible con Bitwarden |
+| Persistencia | `/home/rodrigo/secrets/:/data` | Conserva los datos de Vaultwarden fuera del contenedor |
+
+#### Flujo de una petición
+
+```mermaid
+flowchart LR
+     client[Cliente Bitwarden] -->|HTTP :80| proxy[Nginx reverse proxy]
+     client -->|HTTPS :443| proxy
+     proxy -->|301 Redirect| tls[HTTPS]
+     tls -->|Docker network homelab\nhttp://vaultwarden:80| vault[Vaultwarden]
+     vault --> data[( /home/rodrigo/secrets )]
+```
+
+1. El cliente accede a `bw.local` o a `192.168.1.11`.
+2. Nginx recibe el tráfico HTTP en el puerto `80` y lo redirige a HTTPS.
+3. Nginx termina TLS en el puerto `443` usando los certificados instalados en
+    `/etc/nginx/certs/`.
+4. Nginx reenvía el tráfico internamente a `http://vaultwarden:80` mediante la
+    red Docker `homelab`.
+5. Vaultwarden almacena sus datos en el volumen montado en `/data`.
+
+#### Certificados
+
+Los certificados TLS autofirmados se copian al directorio de construcción del
+reverse proxy y se incluyen en la imagen Nginx:
+
+- `cert.pem` -> `/etc/nginx/certs/cert.pem`
+- `cert.key` -> `/etc/nginx/certs/cert.key`
+
+La configuración de Nginx utiliza estos archivos para HTTPS y establece los
+headers `Host`, `X-Real-IP`, `X-Forwarded-For` y `X-Forwarded-Proto` al
+comunicarse con Vaultwarden.
+
+#### Despliegue
+
+El playbook ejecuta los roles en este orden:
+
+```yaml
+- { role: vault, tags: ['vault'] }
+- { role: reverse-proxy, tags: ['reverse-proxy'] }
+```
+
+El rol `vault` descarga `vaultwarden/server:latest` cuando es necesario y
+ejecuta el contenedor en la red `homelab`. El rol `reverse-proxy` copia el
+Dockerfile, la configuración y los certificados, construye la imagen
+`reverse-proxy:1.0` y publica los puertos `80` y `443` del Raspberry Pi.
+
 
